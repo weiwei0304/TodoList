@@ -1,7 +1,7 @@
 import React, { useReducer, useState, useEffect } from 'react';
+import Button from './Button';
 
 // todolist初始狀態
-
 const initialState = {
   todos: [{ id: 1, text: 'Learn React' }],
 };
@@ -20,6 +20,19 @@ function reducer(state, action) {
         ...state,
         todos: state.todos.filter((todo) => todo.id !== action.payload),
       };
+
+    //勾選
+    case 'toggle':
+      return {
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === action.payload
+            ? { ...todo, completed: !todo.completed }
+            : todo
+        ),
+      };
+
+    //初始化
     case 'initialize':
       return {
         ...state,
@@ -43,7 +56,7 @@ export default function TodoList() {
     }
   }, []);
 
-  //薪增
+  //新增
   const handleAdd = () => {
     if (addTodo.trim() !== '') {
       dispatch({ type: 'add', payload: addTodo });
@@ -57,6 +70,7 @@ export default function TodoList() {
     }
   };
 
+  //刪除
   const handleDelete = (id) => {
     dispatch({ type: 'delete', payload: id });
     localStorage.setItem(
@@ -65,26 +79,48 @@ export default function TodoList() {
     );
   };
 
+  //checkbox
+  const handleToggle = (id) => {
+    dispatch({ type: 'toggle', payload: id });
+    localStorage.setItem(
+      'todos',
+      JSON.stringify(
+        state.todos.map((todo) =>
+          todo.id ? { ...todo, completed: !todo.completed } : todo
+        )
+      )
+    );
+  };
+
   return (
-    <div className="flex justify-center">
-      <div className="bg-blue-300 px-8 py-4 mt-6 rounded-md">
-        <h1>Todo List</h1>
-        <ul>
-          {state.todos.map((todo, i) => (
-            <li key={todo.id}>
-              <input type="checkbox" />
-              {todo.text}
-              <button onClick={() => handleDelete(todo.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-        <div>
+    <div className="px-2 py-6">
+      <ul>
+        {state.todos.map((todo, i) => (
+          <li key={todo.id} className="flex items-center justify-between">
+            <div>
+              <input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => handleToggle(todo.id)}
+              />
+              <span className={todo.completed ? 'line-through' : ''}>
+                {todo.text}
+              </span>
+            </div>
+            <Button type={'delete'} onClick={() => handleDelete(todo.id)} />
+          </li>
+        ))}
+      </ul>
+      <div>
+        <p>Add to list</p>
+        <div className="flex items-center">
           <input
             type="text"
             value={addTodo}
             onChange={(e) => setAddTodo(e.target.value)}
+            className="py-2 rounded-md"
           />
-          <button onClick={handleAdd}>Add</button>
+          <Button type={'add'} onClick={handleAdd} />
         </div>
       </div>
     </div>
