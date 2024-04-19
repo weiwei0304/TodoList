@@ -5,7 +5,7 @@ export default function App() {
   return (
     <>
       <div className="flex justify-center mt-8">
-        <div className="rounded-md bg-gradient-to-b from-blue-300 to bg-purple-200">
+        <div className="rounded-md bg-gradient-to-b from-blue-300 to bg-purple-200 w-full max-w-md">
           <Header />
           <TodoList />
         </div>

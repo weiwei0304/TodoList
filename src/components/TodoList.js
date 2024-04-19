@@ -1,9 +1,10 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import Button from './Button';
+import Percentage from './Percentage';
 
 // todolist初始狀態
 const initialState = {
-  todos: [{ id: 1, text: 'Learn React' }],
+  todos: [{}],
 };
 
 function reducer(state, action) {
@@ -93,7 +94,8 @@ export default function TodoList() {
   };
 
   return (
-    <div className="px-2 py-6">
+    <div className="px-4 py-6">
+      <Percentage />
       <ul>
         {state.todos.map((todo, i) => (
           <li key={todo.id} className="flex items-center justify-between">
@@ -118,7 +120,7 @@ export default function TodoList() {
             type="text"
             value={addTodo}
             onChange={(e) => setAddTodo(e.target.value)}
-            className="py-2 rounded-md"
+            className="py-2 px-2 rounded-md w-full"
           />
           <Button type={'add'} onClick={handleAdd} />
         </div>
