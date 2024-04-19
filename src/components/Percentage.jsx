@@ -4,18 +4,18 @@ function Percentage({ value }) {
   return (
     <div>
       <div className="flex justify-between mb-1">
-        <span className="text-base font-medium text-blue-700 dark:text-white">
-          YourComponent
-        </span>
-        <span className="text-sm font-medium text-blue-700 dark:text-white">
-          {percentageValue}%
-        </span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-        <div
-          className="bg-blue-600 h-2.5 rounded-full"
-          style={{ width: `${percentageValue}%` }}
-        ></div>
+        <div>
+          <span className="text-sm font-medium text-blue-700">
+            {percentageValue}%
+          </span>
+        </div>
+
+        <div className="w-11/12 bg-gray-200 rounded-full h-2.5 my-auto">
+          <div
+            className="bg-blue-600 h-2.5 rounded-full"
+            style={{ width: `${percentageValue}%` }}
+          ></div>
+        </div>
       </div>
     </div>
   );

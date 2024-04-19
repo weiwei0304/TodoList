@@ -4,7 +4,7 @@ import Percentage from './Percentage';
 
 // todolist初始狀態
 const initialState = {
-  todos: [{}],
+  todos: [],
 };
 
 function reducer(state, action) {
@@ -94,22 +94,27 @@ export default function TodoList() {
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 pb-6">
       <Percentage />
-      <ul>
+      <ul className="flex flex-col gap-2">
         {state.todos.map((todo, i) => (
-          <li key={todo.id} className="flex items-center justify-between">
-            <div>
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => handleToggle(todo.id)}
-              />
-              <span className={todo.completed ? 'line-through' : ''}>
-                {todo.text}
-              </span>
+          <li key={todo.id}>
+            <div className="bg-gray-100 w-full h-12 flex justify-between items-center rounded-md px-4">
+              <div className="flex">
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => handleToggle(todo.id)}
+                  className="mr-4"
+                />
+                <span className={todo.completed ? 'line-through' : ''}>
+                  {todo.text}
+                </span>
+              </div>
+              <div className="flex items-center">
+                <Button type={'delete'} onClick={() => handleDelete(todo.id)} />
+              </div>
             </div>
-            <Button type={'delete'} onClick={() => handleDelete(todo.id)} />
           </li>
         ))}
       </ul>
@@ -122,7 +127,7 @@ export default function TodoList() {
             onChange={(e) => setAddTodo(e.target.value)}
             className="py-2 px-2 rounded-md w-full"
           />
-          <Button type={'add'} onClick={handleAdd} />
+          <Button type={'add'} onClick={() => handleAdd()} />
         </div>
       </div>
     </div>
