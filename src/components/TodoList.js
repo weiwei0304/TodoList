@@ -49,6 +49,8 @@ export default function TodoList() {
 
   // 新增狀態
   const [addTodo, setAddTodo] = useState('');
+  //已完成todos的數量
+  const [completedTodos, setCompletedTodos] = useState(0);
 
   useEffect(() => {
     const storedTodos = localStorage.getItem('todos');
@@ -74,10 +76,8 @@ export default function TodoList() {
   //刪除
   const handleDelete = (id) => {
     dispatch({ type: 'delete', payload: id });
-    localStorage.setItem(
-      'todos',
-      JSON.stringify(state.todos.filter((todo) => todo.id !== id))
-    );
+    const updatedTodos = state.todos.filter((todo) => todo.id !== id);
+    localStorage.setItem('todos', JSON.stringify(updatedTodos));
   };
 
   //checkbox
@@ -87,15 +87,25 @@ export default function TodoList() {
       'todos',
       JSON.stringify(
         state.todos.map((todo) =>
-          todo.id ? { ...todo, completed: !todo.completed } : todo
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
         )
       )
     );
   };
 
+  useEffect(() => {
+    const completedCount = state.todos.filter((todo) => todo.completed).length;
+    setCompletedTodos(completedCount);
+  }, [state.todos]);
+
+  //完成率
+  const completedPercentage = Math.round(
+    (completedTodos / state.todos.length) * 100
+  );
+
   return (
     <div className="px-4 pb-6">
-      <Percentage />
+      <Percentage value={completedPercentage} />
       <ul className="flex flex-col gap-2">
         {state.todos.map((todo, i) => (
           <li key={todo.id}>
@@ -118,6 +128,7 @@ export default function TodoList() {
           </li>
         ))}
       </ul>
+      <div className="mt-3 border-b border-red-300"></div>
       <div>
         <p>Add to list</p>
         <div className="flex items-center">
@@ -125,6 +136,11 @@ export default function TodoList() {
             type="text"
             value={addTodo}
             onChange={(e) => setAddTodo(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleAdd();
+              }
+            }}
             className="py-2 px-2 rounded-md w-full"
           />
           <Button type={'add'} onClick={() => handleAdd()} />
