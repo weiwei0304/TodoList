@@ -33,9 +33,9 @@ function Button({ type, onClick }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            strokeWidth="1.5"
+            strokeWidth="2.5"
             stroke="currentColor"
-            className="w-5 h-5"
+            className="w-5 h-5 text-slate-300 hover:text-blue-400 duration-300"
           >
             <path
               strokeLinecap="round"

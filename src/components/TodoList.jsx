@@ -109,13 +109,13 @@ export default function TodoList() {
       <ul className="flex flex-col gap-2">
         {state.todos.map((todo, i) => (
           <li key={todo.id}>
-            <div className="bg-gray-100 w-full h-12 flex justify-between items-center rounded-md px-4">
-              <div className="flex">
+            <div className="bg-white w-full h-12 flex justify-between items-center rounded-md px-4">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
                   checked={todo.completed}
                   onChange={() => handleToggle(todo.id)}
-                  className="mr-4"
+                  className="mr-4 w-5 h-5 accent-blue-500"
                 />
                 <span className={todo.completed ? 'line-through' : ''}>
                   {todo.text}
