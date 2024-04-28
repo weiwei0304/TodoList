@@ -1,10 +1,12 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import Button from './Button';
 import Percentage from './Percentage';
+import Switch from './Switch';
 
 // todolist初始狀態
 const initialState = {
   todos: [],
+  moveCompleted: false,
 };
 
 function reducer(state, action) {
@@ -33,6 +35,12 @@ function reducer(state, action) {
         ),
       };
 
+    case 'toggleSwitch':
+      return {
+        ...state,
+        moveCompleted: !state.moveCompleted,
+      };
+
     //初始化
     case 'initialize':
       return {
@@ -51,6 +59,8 @@ export default function TodoList() {
   const [addTodo, setAddTodo] = useState('');
   //已完成todos的數量
   const [completedTodos, setCompletedTodos] = useState(0);
+
+  const [moveCompleted, setMoveCompleted] = useState(false);
 
   useEffect(() => {
     const storedTodos = localStorage.getItem('todos');
@@ -93,21 +103,46 @@ export default function TodoList() {
     );
   };
 
+  const handleToggleSwitch = () => {
+    dispatch({ type: 'toggleSwitch' });
+    setMoveCompleted(!moveCompleted);
+    localStorage.setItem('moveCompleted', JSON.stringify(!moveCompleted));
+  };
+
   useEffect(() => {
     const completedCount = state.todos.filter((todo) => todo.completed).length;
     setCompletedTodos(completedCount);
   }, [state.todos]);
+
+  useEffect(() => {
+    const storedTodos = localStorage.getItem('todos');
+    if (storedTodos) {
+      dispatch({ type: 'initialize', payload: JSON.parse(storedTodos) });
+    }
+
+    const storedMoveCompleted = localStorage.getItem('moveCompleted');
+    if (storedMoveCompleted) {
+      setMoveCompleted(JSON.parse(storedMoveCompleted));
+    }
+  }, []);
 
   //完成率
   const completedPercentage = Math.round(
     (completedTodos / state.todos.length) * 100
   );
 
+  const storedTodos = moveCompleted
+    ? [
+        ...state.todos.filter((todo) => !todo.completed),
+        ...state.todos.filter((todo) => todo.completed),
+      ]
+    : state.todos;
+
   return (
     <div className="px-4 pb-6">
       <Percentage value={completedPercentage} />
       <ul className="flex flex-col gap-2">
-        {state.todos.map((todo, i) => (
+        {storedTodos.map((todo, i) => (
           <li key={todo.id}>
             <div className="bg-white w-full h-12 flex justify-between items-center rounded-md px-4">
               <div className="flex items-center">
@@ -129,6 +164,9 @@ export default function TodoList() {
         ))}
       </ul>
       <div className="mt-3 border-b border-red-300"></div>
+      <div className="text-right mt-3">
+        <Switch onChange={handleToggleSwitch} />
+      </div>
       <div>
         <p>Add to list</p>
         <div className="flex items-center">
