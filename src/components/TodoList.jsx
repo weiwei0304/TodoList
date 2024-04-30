@@ -122,7 +122,7 @@ export default function TodoList() {
 
     const storedMoveCompleted = localStorage.getItem('moveCompleted');
     if (storedMoveCompleted) {
-      setMoveCompleted(JSON.parse(storedMoveCompleted));
+      dispatch({ type: 'toggleSwitch' });
     }
   }, []);
 
